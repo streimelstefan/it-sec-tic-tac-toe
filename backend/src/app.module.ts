@@ -4,6 +4,7 @@ import { Configuration } from './configuration/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { IsUpModule } from './is-up/is-up.module';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { UserModule } from './user/user.module';
       inject: [ConfigurationService],
     }),
     AuthModule,
-    UserModule
+    UserModule,
+    IsUpModule
   ],
   controllers: [],
   providers: [],
