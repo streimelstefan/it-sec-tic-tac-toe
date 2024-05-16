@@ -15,7 +15,6 @@ FROM node:${NODE_VERSION}-alpine as base
 # Set working directory for all build stages.
 WORKDIR /usr/src/app
 
-
 ################################################################################
 # Create a stage for installing production dependecies.
 FROM base as deps
@@ -43,12 +42,31 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 # Copy the rest of the source files into the image.
 COPY . .
 # Run the build script.
-RUN npm run build
+RUN npm run build:backend
+
+################################################################################
+# Create a stage for running the application in development mode.
+FROM base as dev
+
+# Copy package.json so that package manager commands can be used.
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm ci --include=dev
+
+COPY . .
+
+# Expose the port that the application listens on.
+EXPOSE 3000
+EXPOSE 9229
+
+# Run the application.
+CMD npm run start:dev
 
 ################################################################################
 # Create a new stage to run the application with minimal runtime dependencies
 # where the necessary files are copied from the build stage.
-FROM base as final
+FROM base as prod
 
 # Use production node environment by default.
 ENV NODE_ENV production
@@ -62,7 +80,7 @@ COPY package.json .
 # Copy the production dependencies from the deps stage and also
 # the built application from the build stage into the image.
 COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/dist/apps/backend ./dist/apps/backend
 
 
 # Expose the port that the application listens on.

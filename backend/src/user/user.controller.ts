@@ -20,7 +20,6 @@ import { Admin } from '../auth/decorators/admin.decorator';
 @Controller('users')
 @ApiTags('Users')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 export class UserController {
   public constructor(private readonly userService: UserService) { }
 
@@ -30,16 +29,19 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   public async findAll() {
     return this.userService.findAll();
   }
 
   @Get(':internalId')
+  @UseGuards(JwtAuthGuard)
   public async findOne(@Param('internalId') internalId: UserId) {
     return this.userService.findOne(internalId);
   }
 
   @Patch(':internalId')
+  @UseGuards(JwtAuthGuard)
   public async update(
     @Param('internalId') internalId: UserId,
     @Body() updateUserDto: UpdateUserDto,
@@ -48,6 +50,7 @@ export class UserController {
   }
 
   @Delete(':internalId')
+  @UseGuards(JwtAuthGuard)
   public async remove(@Param('internalId') internalId: UserId) {
     return this.userService.remove(internalId);
   }

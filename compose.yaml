@@ -11,6 +11,7 @@ services:
   server:
     build:
       context: ./backend
+      target: dev
     environment:
       NODE_ENV: production
       DATABASE__HOST: db
@@ -24,6 +25,7 @@ services:
       AUTH__JWT_SECRET: fdsafdhfghjdksavhjfkldsbfjkdlahfjkldahfjdkalsfhedjsakl
     ports:
       - 3000:3000
+      - 9229:9229
     volumes:
       - ./backend/src:/usr/src/app/src    
     depends_on:
