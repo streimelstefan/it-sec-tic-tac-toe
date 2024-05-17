@@ -31,6 +31,14 @@ services:
     depends_on:
       - db
 
+  ui:
+    build:
+      context: ./frontend
+    ports:
+      - 80:80  
+    depends_on:
+      - server
+
   db:
     image: postgres:14.1-alpine
     restart: always
