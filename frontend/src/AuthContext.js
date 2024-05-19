@@ -36,6 +36,34 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const register = async (username, password, firstname, lastname, email) => {
+    try {
+      const res = await axios.post("/api/users", {
+        password,
+        userName: username,
+        lastName: lastname,
+        firstName: firstname,
+        email,
+        isAdmin: false,
+        isActive: true,
+      });
+
+      if (res.status === 201) {
+        return login(username, password);
+      }
+
+      alert(
+        "Registrierung fehlgeschlagen! Bitte überprüfen Sie Ihre Anmeldedaten."
+      );
+      console.error("Register error:", res.data);
+      return false;
+    } catch (error) {
+      alert("Ein Fehler ist aufgetreten beim Versuch, sich zu registrieren.");
+      console.error("Register error:", error);
+      return false;
+    }
+  };
+
   const getAuthHeader = () => {
     return {
       headers: {
@@ -50,7 +78,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, getAuthHeader }}
+      value={{ isAuthenticated, login, logout, getAuthHeader, register }}
     >
       {children}
     </AuthContext.Provider>

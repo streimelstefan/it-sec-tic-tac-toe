@@ -12,14 +12,23 @@ import {
   Link,
 } from "@chakra-ui/react";
 
-function LoginPage() {
+function RegisterPage() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const success = await login(username, password);
+    const success = await register(
+      username,
+      password,
+      firstName,
+      lastName,
+      email
+    );
     if (success) {
       navigate("/main");
     } else {
@@ -36,6 +45,33 @@ function LoginPage() {
         boxShadow="lg"
       >
         <VStack spacing={4}>
+          <FormControl id="firstname">
+            <FormLabel>Name</FormLabel>
+            <Input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Name eingeben"
+            />
+          </FormControl>
+          <FormControl id="lastname">
+            <FormLabel>Nachname</FormLabel>
+            <Input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Nachname eingeben"
+            />
+          </FormControl>
+          <FormControl id="email">
+            <FormLabel>Email</FormLabel>
+            <Input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email eingeben"
+            />
+          </FormControl>
           <FormControl id="username">
             <FormLabel>Benutzername</FormLabel>
             <Input
@@ -55,13 +91,13 @@ function LoginPage() {
             />
           </FormControl>
           <Button width="full" onClick={handleLogin} colorScheme="blue">
-            Login
+            Register
           </Button>
-          <Link href="/register">Or Register</Link>
+          <Link href="/login">Or Login</Link>
         </VStack>
       </Box>
     </Flex>
   );
 }
 
-export default LoginPage;
+export default RegisterPage;
